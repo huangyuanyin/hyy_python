@@ -87,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ceshi',
         'USER': 'root',
-        'PASSWORD': 'mysql',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': 3306
     }
@@ -132,6 +132,10 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField',
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # 运行所有用户跨域请求
 CORS_ORIGIN_ALLOW_ALL = True
+
+# 指定自定义用户模型
+AUTH_USER_MODEL = 'users.User'
