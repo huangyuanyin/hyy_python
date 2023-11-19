@@ -10,5 +10,7 @@ urlpatterns = [
     # 刷新token
     path('token/refresh', TokenRefreshView.as_view()),
     # 校验token
-    path('token/verify', TokenVerifyView.as_view())
+    path('token/verify', TokenVerifyView.as_view()),
+    # 获取单个用户信息的路由
+    path('user/<int:pk>', views.UserView.as_view({'get': 'retrieve'}))
 ]

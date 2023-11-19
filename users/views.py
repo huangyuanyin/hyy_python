@@ -1,14 +1,15 @@
 import re
 
 from django.shortcuts import render
-from rest_framework import status
+from rest_framework import status, mixins
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
-
+from rest_framework.viewsets import GenericViewSet
 from users.models import User
+from .serializers import UserSerializer
 
 
 class RegisterView(APIView):
@@ -67,3 +68,9 @@ class LoginView(TokenObtainPairView):
         result['username'] = serializer.user.username
         result['token'] = result.pop('access')
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class UserView(GenericViewSet, mixins.RetrieveModelMixin):
+    """用户相关操作的视图集"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
