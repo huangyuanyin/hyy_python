@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class BaseModel(models.Model):
     """抽象的模型基类：定义一些公共的模型字段"""
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -150,3 +151,28 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication'
     )
 }
+
+# token的相关配置
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # 访问令牌的有效时间
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 刷新令牌的有效时间
+
+    "ROTATE_REFRESH_TOKENS": False,  # 若为True，则刷新后新的refresh_token有更新的有效时间
+    "BLACKLIST_AFTER_ROTATION": True,  # 若为True，刷新后的token将添加到黑名单中
+
+    "ALGORITHM": "HS256",  # 对称算法：HS256 HS384 HS512  非对称算法：RSA
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+
+    "AUTH_HEADER_TYPES": ("Bearer",),  # Authorizations：Bearer <token>
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",  # 使用唯一不变的数据库字段，将包含在生成的令牌中以标识用
+    "USER_ID_CLAIM": "user_id"
+}
+
+# 使用自定义的认证类进行身份认证（登录时验证用户信息）
+AUTHENTICATION_BACKENDS = [
+    'common.authenticate.MyBackend'
+]
