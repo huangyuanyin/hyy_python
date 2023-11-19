@@ -9,7 +9,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from users.models import User
+from .permissions import UserPermissions
 from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class RegisterView(APIView):
@@ -74,3 +76,5 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
     """用户相关操作的视图集"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # 设置认证用户才能有权限访问
+    permission_classes = [IsAuthenticated, UserPermissions]
