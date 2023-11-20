@@ -12,5 +12,9 @@ urlpatterns = [
     # 校验token
     path('token/verify', TokenVerifyView.as_view()),
     # 获取单个用户信息的路由
-    path('user/<int:pk>', views.UserView.as_view({'get': 'retrieve'}))
+    path('user/<int:pk>', views.UserView.as_view({'get': 'retrieve'})),
+    # 上传用户头像的路由
+    path('<int:pk>/avatar/upload', views.UserView.as_view({
+        "post": "upload_avatar"
+    }))
 ]

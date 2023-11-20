@@ -78,3 +78,21 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = UserSerializer
     # 设置认证用户才能有权限访问
     permission_classes = [IsAuthenticated, UserPermissions]
+
+    def upload_avatar(self, request, *arg, **kwargs):
+        """"上传用户头像"""
+        avatar = request.data.get('avatar')
+        # 校验是否有上传文件
+        if not avatar:
+            return Response({'error': '上传失败，文件不能为空'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        # 校验文件大小不能超过300kb
+        if avatar.size > 1024 * 300:
+            return Response({'error': '上传失败，文件大小不能超过300kb'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        # 保存文件
+        user = self.get_object()
+        # 获取序列号对象
+        ser = self.get_serializer(user, data={"avatar": avatar}, partial=True)
+        # 校验
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        return Response({'url': ser.data['avatar']})

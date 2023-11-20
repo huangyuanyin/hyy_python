@@ -176,3 +176,8 @@ SIMPLE_JWT = {
 AUTHENTICATION_BACKENDS = [
     'common.authenticate.MyBackend'
 ]
+
+# 文件上传保存的路径
+MEDIA_ROOT = BASE_DIR / 'file/image'
+# 指定文件的获取的url路径
+MEDIA_URL = 'file/image/'
