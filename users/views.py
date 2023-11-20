@@ -1,5 +1,7 @@
+import os
 import re
 
+from django.http import FileResponse
 from django.shortcuts import render
 from rest_framework import status, mixins
 from rest_framework.request import Request
@@ -8,6 +10,8 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
+
+from hyy_python.settings import MEDIA_ROOT
 from users.models import User
 from .permissions import UserPermissions
 from .serializers import UserSerializer
@@ -96,3 +100,12 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         ser.is_valid(raise_exception=True)
         ser.save()
         return Response({'url': ser.data['avatar']})
+
+
+class FileView(APIView):
+    """获取文件的视图"""
+    def get(self, request, name):
+        path = MEDIA_ROOT / name
+        if os.path.isfile(path):
+            return FileResponse(open(path, 'rb'))
+        return Response({'error': "没有找到该文件！"}, status=status.HTTP_404_NOT_FOUND)
