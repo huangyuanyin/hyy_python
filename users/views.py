@@ -12,9 +12,9 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from hyy_python.settings import MEDIA_ROOT
-from users.models import User
+from users.models import User, Addr
 from .permissions import UserPermissions
-from .serializers import UserSerializer
+from .serializers import UserSerializer, AddrSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -109,3 +109,9 @@ class FileView(APIView):
         if os.path.isfile(path):
             return FileResponse(open(path, 'rb'))
         return Response({'error': "没有找到该文件！"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class AddrView(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.UpdateModelMixin):
+    """地址管理视图"""
+    queryset = Addr.objects.all()
+    serializer_class = AddrSerializer
