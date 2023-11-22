@@ -13,7 +13,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from hyy_python.settings import MEDIA_ROOT
 from users.models import User, Addr
-from .permissions import UserPermissions
+from .permissions import UserPermissions, AddPermissions
 from .serializers import UserSerializer, AddrSerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -115,3 +115,18 @@ class AddrView(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, m
     """地址管理视图"""
     queryset = Addr.objects.all()
     serializer_class = AddrSerializer
+    # 设置认证用户才能有权限访问
+    permission_classes = [IsAuthenticated, AddPermissions]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        # 通过请求过来的用户信息进行过滤
+        queryset = queryset.filter(user=request.user)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return serializer.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    
