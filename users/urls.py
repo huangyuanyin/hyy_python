@@ -26,5 +26,9 @@ urlpatterns = [
     path('address/<int:pk>', views.AddrView.as_view({
         "delete": "destroy",
         "put": "update"
+    })),
+    # 设置默认收货地址
+    path('address/<int:pk>/default', views.AddrView.as_view({
+        "put": "set_default_addr",
     }))
 ]
